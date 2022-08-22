@@ -1,9 +1,9 @@
 package response
 
 import (
-	uerror "192.168.0.209/wl/utility/error"
 	jsoniter "github.com/json-iterator/go"
 	"net/http"
+	uerror "utility/error"
 )
 
 const MessageSuccess = "OK"

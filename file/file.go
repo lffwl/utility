@@ -1,14 +1,14 @@
 package file
 
 import (
-	uerror "192.168.0.209/wl/utility/error"
-	"192.168.0.209/wl/utility/response"
 	"fmt"
 	"io"
 	"net/http"
 	"net/url"
 	"os"
 	"path/filepath"
+	uerror "utility/error"
+	"utility/response"
 )
 
 // IsExist 文件是否存在

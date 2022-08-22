@@ -1,10 +1,10 @@
 package config
 
 import (
-	"192.168.0.209/wl/utility/file"
 	"fmt"
 	"gopkg.in/yaml.v3"
 	"io/ioutil"
+	"utility/file"
 )
 
 // LoadConfig 加载配置

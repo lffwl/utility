@@ -1,12 +1,12 @@
 package jwt
 
 import (
-	uerror "192.168.0.209/wl/utility/error"
 	"errors"
 	gjwt "github.com/golang-jwt/jwt/v4"
 	"net/http"
 	"strings"
 	"time"
+	uerror "utility/error"
 )
 
 var (

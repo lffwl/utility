@@ -1,4 +1,4 @@
-module 192.168.0.209/wl/utility
+module utility
 
 go 1.18
 
