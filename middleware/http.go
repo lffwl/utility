@@ -18,13 +18,13 @@ const (
 func HttpResponse(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 
+		bodyWriter := response.NewResponseBodyWriter(w)
+
+		w = bodyWriter
+
+		next.ServeHTTP(w, r)
+
 		if w.Header().Get("content-type") == "text/json" {
-
-			bodyWriter := response.NewResponseBodyWriter(w)
-
-			w = bodyWriter
-
-			next.ServeHTTP(w, r)
 
 			var res response.JsonResponse
 			if err := json.Unmarshal(bodyWriter.GetBodyBytesAndReset(), &res); err != nil {
@@ -49,9 +49,10 @@ func HttpResponse(next http.Handler) http.Handler {
 			response.Json(w, res.Code, res.Message, res.Data)
 			bodyWriter.OutPut()
 			return
+		} else {
+			bodyWriter.OutPut()
 		}
 
-		next.ServeHTTP(w, r)
 	})
 
 }
