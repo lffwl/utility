@@ -2,8 +2,8 @@ package response
 
 import (
 	jsoniter "github.com/json-iterator/go"
+	uerror "github.com/lffwl/utility/error"
 	"net/http"
-	uerror "utility/error"
 )
 
 const MessageSuccess = "OK"

@@ -1,4 +1,4 @@
-module utility
+module github.com/lffwl/utility
 
 go 1.18
 

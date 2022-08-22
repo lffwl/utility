@@ -2,9 +2,9 @@ package config
 
 import (
 	"fmt"
+	"github.com/lffwl/utility/file"
 	"gopkg.in/yaml.v3"
 	"io/ioutil"
-	"utility/file"
 )
 
 // LoadConfig 加载配置

@@ -2,13 +2,13 @@ package file
 
 import (
 	"fmt"
+	uerror "github.com/lffwl/utility/error"
+	"github.com/lffwl/utility/response"
 	"io"
 	"net/http"
 	"net/url"
 	"os"
 	"path/filepath"
-	uerror "utility/error"
-	"utility/response"
 )
 
 // IsExist 文件是否存在

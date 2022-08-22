@@ -1,6 +1,6 @@
 package dataproc
 
-import "utility/define"
+import "github.com/lffwl/utility/define"
 
 // SliceUnion 并集
 func SliceUnion[T string](slice1, slice2 []T) []T {

@@ -3,10 +3,10 @@ package jwt
 import (
 	"errors"
 	gjwt "github.com/golang-jwt/jwt/v4"
+	uerror "github.com/lffwl/utility/error"
 	"net/http"
 	"strings"
 	"time"
-	uerror "utility/error"
 )
 
 var (
