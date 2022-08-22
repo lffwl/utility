@@ -4,7 +4,6 @@ import (
 	jsoniter "github.com/json-iterator/go"
 	uerror "github.com/lffwl/utility/error"
 	"github.com/lffwl/utility/response"
-	"io/ioutil"
 	"net/http"
 )
 
@@ -16,18 +15,19 @@ const (
 	HttpUnauthorizedCode         = 401
 )
 
-func HttpResponse(handler http.Handler) http.Handler {
+func HttpResponse(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		handler.ServeHTTP(w, r)
-		bytes, err := ioutil.ReadAll(r.Response.Body)
-		if err != nil {
-			response.Json(w, HttpInternalServiceErrorCode, err.Error())
-			return
-		}
+
+		bodyWriter := response.NewResponseBodyWriter(w)
+
+		w = bodyWriter
+
+		next.ServeHTTP(w, r)
 
 		var res response.JsonResponse
-		if err := json.Unmarshal(bytes, &res); err != nil {
+		if err := json.Unmarshal(bodyWriter.GetBodyBytesAndReset(), &res); err != nil {
 			response.Json(w, HttpInternalServiceErrorCode, err.Error())
+			bodyWriter.OutPut()
 			return
 		}
 
@@ -45,6 +45,7 @@ func HttpResponse(handler http.Handler) http.Handler {
 		}
 
 		response.Json(w, res.Code, res.Message, res.Data)
+		bodyWriter.OutPut()
 		return
 	})
 }
