@@ -13,6 +13,7 @@ const (
 	HttpOKCode                   = 200
 	HttpInternalServiceErrorCode = 500
 	HttpUnauthorizedCode         = 401
+	HttpAuthorizedExpiryCode     = 600
 )
 
 func HttpResponse(next http.Handler) http.Handler {
@@ -42,8 +43,9 @@ func HttpResponse(next http.Handler) http.Handler {
 			case uerror.HighErrorServiceErrorCode:
 				res.Code = HttpInternalServiceErrorCode
 			case uerror.HighErrorNotAuthCode:
-			case uerror.HighErrorAuthFailedCode:
 				res.Code = HttpUnauthorizedCode
+			case uerror.HighErrorAuthFailedCode:
+				res.Code = HttpAuthorizedExpiryCode
 			}
 
 			response.Json(w, res.Code, res.Message, res.Data)

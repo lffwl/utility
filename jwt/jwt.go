@@ -117,16 +117,15 @@ func (u *Jwt) CreateToken(data interface{}) (string, error) {
 // ParseToken ParseToken
 func (u *Jwt) ParseToken(tokenString string) (*gjwt.Token, error) {
 
-	// validate token
-	token, err := gjwt.ParseWithClaims(tokenString, &UJwtCustomClaims{}, func(token *gjwt.Token) (interface{}, error) {
-		return u.conf.EncryptKey, nil
-	})
-
+	// parser token
+	parser := gjwt.NewParser()
+	jwtToken, _, err := parser.ParseUnverified(tokenString, &UJwtCustomClaims{})
 	if err != nil {
 		return nil, err
 	}
 
-	return token, nil
+	return jwtToken, nil
+
 }
 
 // GetData get id
@@ -161,20 +160,26 @@ func (u *Jwt) VerifyToken(r *http.Request) (interface{}, uerror.HighError) {
 	// get token
 	jwtToken, err := u.ParseToken(token)
 	if err != nil {
-		highError.Code = uerror.HighErrorAuthFailedCode
+		highError.Code = uerror.HighErrorNotAuthCode
 		highError.Error = err
 		return nil, highError
 	}
 
 	// get claims
 	claims, ok := jwtToken.Claims.(*UJwtCustomClaims)
-	if ok {
-		return claims.Data, highError
+	if !ok {
+		highError.Code = uerror.HighErrorNotAuthCode
+		highError.Error = errors.New("token parse error")
+		return nil, highError
 	}
 
-	highError.Code = uerror.HighErrorServiceErrorCode
-	highError.Error = errors.New("parse claims error")
-	return nil, highError
+	if time.Now().After(claims.ExpiresAt.Time) {
+		highError.Code = uerror.HighErrorAuthFailedCode
+		highError.Error = errors.New("token expires")
+		return nil, highError
+	}
+
+	return claims.Data, highError
 }
 
 // GetToken get token
