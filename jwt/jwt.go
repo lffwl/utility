@@ -228,8 +228,7 @@ func (u *Jwt) RefreshToken(r *http.Request) (string, error) {
 	token := u.GetToken(r)
 
 	// parser token
-	parser := gjwt.NewParser()
-	jwtToken, _, err := parser.ParseUnverified(token, &UJwtCustomClaims{})
+	jwtToken, err := u.ParseToken(token)
 	if err != nil {
 		return "", err
 	}
