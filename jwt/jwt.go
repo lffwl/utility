@@ -173,6 +173,12 @@ func (u *Jwt) VerifyToken(r *http.Request) (interface{}, uerror.HighError) {
 		return nil, highError
 	}
 
+	if claims.Issuer != u.conf.Issuer {
+		highError.Code = uerror.HighErrorNotAuthCode
+		highError.Error = errors.New("token verify error")
+		return nil, highError
+	}
+
 	if time.Now().After(claims.ExpiresAt.Time) {
 		highError.Code = uerror.HighErrorAuthFailedCode
 		highError.Error = errors.New("token expires")
@@ -236,6 +242,10 @@ func (u *Jwt) RefreshToken(r *http.Request) (string, error) {
 	claims, ok := jwtToken.Claims.(*UJwtCustomClaims)
 	if !ok {
 		return "", errors.New("token error")
+	}
+
+	if claims.Issuer != u.conf.Issuer {
+		return "", errors.New("token verify error")
 	}
 
 	// 验证是否超过有效的刷新时间
